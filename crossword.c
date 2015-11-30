@@ -5,18 +5,29 @@
 #include <stdio.h>
 #include <string.h>
 
-void userInput( char [][16] );
+int userInput( char [][16] );
 void initializeBoard( char [][14] );
+void sortWords( char [][16] , int);
+int compare(char * a, char * b);
 
 int main() {
 
 // Get User Input
 	char words[20][16];
-	userInput(words);
+	int i;
+
+	i = userInput(words);
 
 // Initialize Board
 	char board[14][14]= {0};
 	initializeBoard(board);
+	
+// Sort Words
+	sortWords(words,i);
+	int n;
+	for(n=0;n<i;n++){
+	  printf("%s",words[n]);
+	}
 
 // Generate Puzzle
 
@@ -24,9 +35,9 @@ int main() {
 // Display Hints 
 	
 }
-void userInput( char words[20][16] ) {
+int userInput( char words[20][16] ) {
 	char key[2] = ".";
-	int i=0, loop=1;
+	int  i=0, loop=1;
 
         printf("Anagram Crossword Puzzle Generator\n----------------------------------\n");
         printf("Enter a list of words:\n");
@@ -37,6 +48,8 @@ void userInput( char words[20][16] ) {
                 }
                 i++;
         }
+
+	return i;
 }
 void initializeBoard(char board[14][14]) {
 	int row, col;
@@ -46,6 +59,20 @@ void initializeBoard(char board[14][14]) {
 			board[row][col] = key;
 			printf("%c", board[row][col]);
 		}
+       		  printf("\n");
 	}
 }
 	
+void sortWords(char words[20][16],int i) {
+
+
+    qsort(words[0], i, 16, compare);
+
+}
+
+int compare(char * a, char * b) {
+
+  if (strlen(a) > strlen(b)) return -1;
+  if (strlen(a) == strlen(b)) return 0;
+  if (strlen(a) < strlen(b)) return 1;
+}
