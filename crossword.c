@@ -5,28 +5,28 @@
 #include <stdio.h>
 #include <string.h>
 
-int userInput( char [][16] );
-void initializeBoard( char [][14] );
-void sortWords( char [][16] , int);
+int userInput( char [][17] );
+void initializeBoard( char [][15] );
+void sortWords( char [][17] , int);
 int compare(char * a, char * b);
 
 int main() {
 
 // Get User Input
-	char words[20][16];
+	char words[20][17];
 	int i;
 
 	i = userInput(words);
 
 // Initialize Board
-	char board[14][14]= {0};
+	char board[15][15]= {0};
 	initializeBoard(board);
 	
 // Sort Words
 	sortWords(words,i);
 	int n;
-	for(n=0;n<i;n++){
-	  printf("%s",words[n]);
+	for (n=0; n<i; n++) {
+	  printf("%s\n",words[n]);
 	}
 
 // Generate Puzzle
@@ -35,23 +35,23 @@ int main() {
 // Display Hints 
 	
 }
-int userInput( char words[20][16] ) {
+int userInput( char words[20][17] ) {
 	char key[2] = ".";
 	int  i=0, loop=1;
 
         printf("Anagram Crossword Puzzle Generator\n----------------------------------\n");
         printf("Enter a list of words:\n");
-        while (loop) {
-                fgets(words[i], 16, stdin);
-                if (strcasestr(words[i], key) || i>18) {
+	while (loop) {
+		fscanf(stdin, "%s", words[i]);
+		if (strcasestr(words[i], key) || i>18) {
                         loop=0;
                 }
-                i++;
+		i++;
         }
 
 	return i;
 }
-void initializeBoard(char board[14][14]) {
+void initializeBoard(char board[15][15]) {
 	int row, col;
 	char key = '.';
 	for (row=0; row<15; row++) {
@@ -62,17 +62,12 @@ void initializeBoard(char board[14][14]) {
        		  printf("\n");
 	}
 }
+void sortWords(char words[20][17],int i) {
 	
-void sortWords(char words[20][16],int i) {
-
-
-    qsort(words[0], i, 16, compare);
-
+	qsort(words[0], i, 17, compare);
 }
-
 int compare(char * a, char * b) {
-
-  if (strlen(a) > strlen(b)) return -1;
-  if (strlen(a) == strlen(b)) return 0;
-  if (strlen(a) < strlen(b)) return 1;
+	if (strlen(a) > strlen(b)) return -1;
+	if (strlen(a) == strlen(b)) return 0;
+  	if (strlen(a) < strlen(b)) return 1;
 }
