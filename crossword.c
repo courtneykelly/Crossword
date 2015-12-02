@@ -95,44 +95,51 @@ int compare(char * a, char * b) {
 }
 void initialPlace(char words[21][16], char board[15][15]) {
 
-  int length = strlen(words[0]);
-  int startPoint = (15 - length)/2;
-  int n=0, i;
+  	int length = strlen(words[0]);
+  	int startPoint = (15 - length)/2;
+  	int n=0, i;
 
-  for (i=startPoint;i<(startPoint+length);i++){
-    board[7][i] = words[0][n];
-    n++;
-  }
-
+  	for (i=startPoint;i<(startPoint+length);i++){
+    		board[7][i] = words[0][n];
+    		n++;
+  	}
 }
  int placeWord(char * word, char board[15][15]) {
 
-   int row,col,i;
-   int length= strlen(word);
+   	int row,col,i;
+   	int length= strlen(word);
 
-   for (i=0; i<length; i++) {
-     for(row=0; row<15; row++){
-       for(col=0; col<15; col++){
-	 if (board[row][col]==word[i]) {
-	   //if(can_place_word(word,board,row,col,i)){
-	   return place_success;
-	   //}
-	 }
-       }
-     }
-   }
-     return place_failure;
+   	for (i=0; i<length; i++) {
+     		for(row=0; row<15; row++){
+       			for(col=0; col<15; col++){
+	 			if (board[row][col]==word[i]) {
+	   				//if(can_place_word(word,board,row,col,i)){
+	   					return place_success;
+	   				//}
+	 			}
+       			}
+     		}
+   	}
+     	return place_failure;
  }
 int can_place_word(char * word, char board[16][16], int row, int col, int i) {
 
-  char key= '.';
-  //Ensure length of word does not exceed length/width of board
-  // horizontal
-     // second half of word
-  int second=0;
-        for (n=col; n<=(length-i); n++) {
-            if (board[row][n]==key)
-         }
-	
+  	char key= '.';
+  	//Ensure length of word does not exceed length/width of board
+  	// horizontal
+     		// second half of word
+  			int n;
+        		for (n=col; n<=(length-i); n++) {
+            			if (board[row][n]==key) {
+         			}
+			}
+		// first half of word
+		// above word row-1
+		// below word row+1
+	// vertical
+		// second half of the word 
+		// first half of the word
+		// left of word col-l
+		// right of word col+1
 }
 
