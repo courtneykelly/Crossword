@@ -15,6 +15,8 @@ void initialPlace(char [][16], char [][15]);
 int placeWord(char [], char [][15]);
 int can_place_word_horiz(char [], char [][15], int, int, int, int);
 int can_place_word_vert(char [], char [][15], int, int, int, int);
+void place_horiz(char[], char[][15], int, int, int, int);
+void place_vert(char[], char[][15], int, int, int, int);
 
 int main() {
 
@@ -35,15 +37,7 @@ int main() {
 
 // Generate Puzzle
 	initialPlace(words,board);
-   
-        for (row=0; row<15; row++) {
-	    for (col=0; col<15; col++) {
-		 printf("%c", board[row][col]);
-		}
-       		  printf("\n");
-	}
-
-	int n;
+   	int n;
 
 	for(n=1; n<(i-1); n++) {
 	  	if(placeWord(words[n], board)) {
@@ -54,10 +48,12 @@ int main() {
 		}
 	}
 
-
-
-
-
+	for (row=0; row<15; row++) {
+            for (col=0; col<15; col++) {
+                 printf("%c", board[row][col]);
+                }
+                  printf("\n");
+        }
 
 // Display Hints 
 	
@@ -118,10 +114,12 @@ void initialPlace(char words[21][16], char board[15][15]) {
 	 			if (board[row][col]==word[i]) {
 					printf("%c", word[i]);
 	   				if (can_place_word_horiz(word, board, row, col, i, length)) {
-	   					return place_success;
+	   					place_horiz(word, board, row, col, i, length);
+						return place_success;
 	   				}
 					else if (can_place_word_vert(word, board, row, col, i, length)) {
-	 					return place_success;
+	 					place_vert(word, board, row, col, i, length);
+						return place_success;
 					}
 				}
        			}
@@ -180,4 +178,16 @@ int can_place_word_vert(char * word, char board[15][15], int row, int col, int i
                         return place_failure;
                 }
         return place_success;
+}
+void place_horiz(char * word, char board[15][15], int row, int col, int i, int length) {
+	int n;
+	for (n=0; n<length; n++) {
+		board[row][col-i+n]=word[n];
+	}
+}
+void place_vert(char * word, char board[15][15], int row, int col, int i, int length) {
+	int n;
+	for (n=0; n<length; n++) {
+		board[row-i+n][col]=word[n];
+	}
 }
