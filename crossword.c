@@ -13,7 +13,7 @@ void sortWords( char [][16] , int);
 int compare(char * a, char * b);
 void initialPlace(char [][16], char [][15]);
 int placeWord(char [], char [][15]);
-int can_place_word(char [], char [][15], int, int, int);
+int can_place_word_horiz(char [], char [][15], int, int, int, int);
 
 int main() {
 
@@ -45,9 +45,9 @@ int main() {
 	int n;
 
 	for(n=1; n<i; n++) {
-	  if(placeWord(words[n], board)) {
+	  if(placeWord(words[n], board)==0) {
 	    //print word on board
-	    printf("yes");
+	    printf("it failed!");
 	  }
 	}
 
@@ -113,33 +113,45 @@ void initialPlace(char words[21][16], char board[15][15]) {
      		for(row=0; row<15; row++){
        			for(col=0; col<15; col++){
 	 			if (board[row][col]==word[i]) {
-	   				//if(can_place_word(word,board,row,col,i)){
+					printf("%c", word[i]);
+	   				if(can_place_word_horiz(word, board, row, col, i, length)){
 	   					return place_success;
-	   				//}
+	   				}
 	 			}
        			}
      		}
    	}
      	return place_failure;
  }
-int can_place_word(char * word, char board[16][16], int row, int col, int i) {
+int can_place_word_horiz(char * word, char board[15][15], int row, int col, int i, int length) {
 
   	char key= '.';
-  	//Ensure length of word does not exceed length/width of board
-  	// horizontal
-     		// second half of word
-  			int n;
-        		for (n=col; n<=(length-i); n++) {
-            			if (board[row][n]==key) {
-         			}
+	int n,k;
+
+	// Checking against width of board
+		if ((length-i) > (15-col) || ((col-i+1)< 0)) {
+			return place_failure;
+		}
+	// Checking immedietly above through immedietly below the potential place for the word
+		for (n=(row-1); n<=(row+1); n++) {
+			for (k=(col-i+1); k<=(col+(length-i)); k++) {
+				if (k==col) {
+					// disregards column bc letters can be there
+				}
+				else if (board[n][k] != key) {
+					return place_failure;
+				}
 			}
-		// first half of word
-		// above word row-1
-		// below word row+1
+		}
+	// Checking the endpoints of the word
+		if ((board[row][col-i] != key) || (board[row][col+(length-i)+1] != key)) {
+			return place_failure;
+		}
+	return place_success;
+}
 	// vertical
 		// second half of the word 
 		// first half of the word
 		// left of word col-l
 		// right of word col+1
-}
 
