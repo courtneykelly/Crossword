@@ -7,17 +7,23 @@
 #define place_success 1
 #define place_failure 0
 
+typedef struct clues {
+	int clueRow;
+	int clueCol;
+	char location[7];
+	char hint[16];
+} clues_t;
+
 int userInput( char [][16] );
 void initializeBoard( char [][15] );
 void sortWords( char [][16] , int);
 int compare(char * a, char * b);
 void initialPlace(char [][16], char [][15]);
-void placeWord(char [], char [][15], int, char[][16]);
+void placeWord(char [], char [][15], int, clues_t clues[]);
 int can_place_word_horiz(char [], char [][15], int, int, int, int);
 int can_place_word_vert(char [], char [][15], int, int, int, int);
 void place_horiz(char[], char[][15], int, int, int, int);
 void place_vert(char[], char[][15], int, int, int, int);
-void generateClues(char [][16]);
 
 int main() {
 
@@ -28,10 +34,10 @@ int main() {
 	i = userInput(words);
 
 // Initialize Board
-	char clues[21][16] = {0};
 	char board[15][15] = {0};
 	initializeBoard(board);
 	int clueCount=0;
+	clues_t clues[20];
 	
 // Sort Words
 	sortWords(words,i);
@@ -117,25 +123,37 @@ void initialPlace(char words[21][16], char board[15][15]) {
     		n++;
   	}
 }
-void  placeWord(char * word, char board[15][15], int clueCount, char clues[21][16]) {
+void  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) {
 
    	int row,col,i;
    	int length= strlen(word);
+	char across[] = "across";
+	char down[] = "down";
 
    	for (i=0; i<length; i++) {
      		for(row=0; row<15; row++){
        			for(col=0; col<15; col++){
 	 			if (board[row][col]==word[i]) {
 	   				if (can_place_word_horiz(word, board, row, col, i, length)) {
-	   					clueCount++;
-						generateClues(clues, clueCount, 2);
-						place_horiz(word, board, row, col, i, length);
+	   					// Get info for Clues
+							clues[clueCount].clueRow=row;
+							clues[clueCount].clueCol=col;
+							strcpy(clues[clueCount].location, "across");
+							clues[clueCount].hint= strfry(word[i]);
+							clueCount++;
+						// Place solution onto board
+							place_horiz(word, board, row, col, i, length);
 						return;
 	   				}
 					else if (can_place_word_vert(word, board, row, col, i, length)) {
-	 					clueCount++;
-                                                generateClues(clues, clueCount, 3);
-						place_vert(word, board, row, col, i, length);
+	 					// Get Info for Clues
+	 						clues[clueCount].clueRow=row;
+                                                        clues[clueCount].clueCol=col;
+                                                        strcpy(clues[clueCount].location, "down");
+                                                        clues[clueCount].hint=strfry(word[i]);
+							clueCount++;
+                                                // Place solution onto board
+							place_vert(word, board, row, col, i, length);
 						return;
 					}
 				}
@@ -207,7 +225,4 @@ void place_vert(char * word, char board[15][15], int row, int col, int i, int le
 	for (n=0; n<length; n++) {
 		board[row-i+n][col]=word[n];
 	}
-}
-void generateClues( char clues[21][16], int clueCount, int direction ){
-	
 }
