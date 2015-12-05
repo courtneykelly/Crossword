@@ -12,11 +12,12 @@ void initializeBoard( char [][15] );
 void sortWords( char [][16] , int);
 int compare(char * a, char * b);
 void initialPlace(char [][16], char [][15]);
-int placeWord(char [], char [][15]);
+void placeWord(char [], char [][15], int, char[][16]);
 int can_place_word_horiz(char [], char [][15], int, int, int, int);
 int can_place_word_vert(char [], char [][15], int, int, int, int);
 void place_horiz(char[], char[][15], int, int, int, int);
 void place_vert(char[], char[][15], int, int, int, int);
+void generateClues(char [][16]);
 
 int main() {
 
@@ -27,32 +28,45 @@ int main() {
 	i = userInput(words);
 
 // Initialize Board
-	char board[15][15]= {0};
+	char clues[21][16] = {0};
+	char board[15][15] = {0};
 	initializeBoard(board);
+	int clueCount=0;
 	
 // Sort Words
 	sortWords(words,i);
-	int row,col;
-	
 
 // Generate Puzzle
 	initialPlace(words,board);
    	int n;
 
 	for(n=1; n<(i-1); n++) {
-	  	if(placeWord(words[n], board)) {
-	   		printf("SUCCESS!");
-		}
-		else {
-			printf("FAILURE!");
-		}
+		placeWord(words[n], board, clueCount, clues);
 	}
 
+// Print Solution
+	int row,col;
+	printf("\nSolution: \n\n");
 	for (row=0; row<15; row++) {
-            for (col=0; col<15; col++) {
-                 printf("%c", board[row][col]);
+        	for (col=0; col<15; col++) {
+                	printf("%c", board[row][col]);
                 }
-                  printf("\n");
+                printf("\n");
+        }
+
+// Print Crossword Puzzle
+	char key = '.';
+	printf("\nCrossword Puzzle:\n\n");
+	for (row=0; row<15; row++) {
+        	for (col=0; col<15; col++) {
+                	if (board[row][col]==key) {
+				printf("#");
+                	}
+			else {
+				printf(" ");
+			}
+		}
+               	printf("\n");
         }
 
 // Display Hints 
@@ -103,7 +117,7 @@ void initialPlace(char words[21][16], char board[15][15]) {
     		n++;
   	}
 }
- int placeWord(char * word, char board[15][15]) {
+void  placeWord(char * word, char board[15][15], int clueCount, char clues[21][16]) {
 
    	int row,col,i;
    	int length= strlen(word);
@@ -112,20 +126,23 @@ void initialPlace(char words[21][16], char board[15][15]) {
      		for(row=0; row<15; row++){
        			for(col=0; col<15; col++){
 	 			if (board[row][col]==word[i]) {
-					printf("%c", word[i]);
 	   				if (can_place_word_horiz(word, board, row, col, i, length)) {
-	   					place_horiz(word, board, row, col, i, length);
-						return place_success;
+	   					clueCount++;
+						generateClues(clues, clueCount, 2);
+						place_horiz(word, board, row, col, i, length);
+						return;
 	   				}
 					else if (can_place_word_vert(word, board, row, col, i, length)) {
-	 					place_vert(word, board, row, col, i, length);
-						return place_success;
+	 					clueCount++;
+                                                generateClues(clues, clueCount, 3);
+						place_vert(word, board, row, col, i, length);
+						return;
 					}
 				}
        			}
      		}
    	}
-     	return place_failure;
+     	return;
  }
 int can_place_word_horiz(char * word, char board[15][15], int row, int col, int i, int length) {
 
@@ -190,4 +207,7 @@ void place_vert(char * word, char board[15][15], int row, int col, int i, int le
 	for (n=0; n<length; n++) {
 		board[row-i+n][col]=word[n];
 	}
+}
+void generateClues( char clues[21][16], int clueCount, int direction ){
+	
 }
