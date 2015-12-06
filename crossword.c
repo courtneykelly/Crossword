@@ -2,6 +2,9 @@
 // crossword.c
 // Katie Schermerhorn and Courtney Kelly
 
+//cycle through failed words
+//print hints
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
@@ -84,7 +87,7 @@ int main() {
 }
 int userInput( char words[21][16] ) {
 	char key[2] = ".";
-	int  i=0, loop=1;
+	int  i=0, loop=1, x, j;
 
         printf("Anagram Crossword Puzzle Generator\n----------------------------------\n");
         printf("Enter a list of words:\n");
@@ -95,6 +98,15 @@ int userInput( char words[21][16] ) {
                 }
 		i++;
         }
+
+	for(x=0; x<i; x++) {
+	  for(j=0; j<16; j++) {
+	    if(words[x][j] >= 'a' && words[x][j] <= 'z') {
+	      words[x][j] = words[x][j] - 32;
+	    }
+	  }
+	}
+
 
 	return i;
 }
