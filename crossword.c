@@ -2,6 +2,7 @@
 // crossword.c
 // Katie Schermerhorn and Courtney Kelly
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #define place_success 1
@@ -24,6 +25,7 @@ int can_place_word_horiz(char [], char [][15], int, int, int, int);
 int can_place_word_vert(char [], char [][15], int, int, int, int);
 void place_horiz(char[], char[][15], int, int, int, int);
 void place_vert(char[], char[][15], int, int, int, int);
+void jumbleWords( char * a, clues_t clues[], int);
 
 int main() {
 
@@ -76,7 +78,9 @@ int main() {
         }
 
 // Display Hints 
-	
+	for (n=0; n<i; n++) {
+		printf("%s", clues[n].hint);
+	}
 }
 int userInput( char words[21][16] ) {
 	char key[2] = ".";
@@ -127,8 +131,6 @@ void  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[])
 
    	int row,col,i;
    	int length= strlen(word);
-	char across[] = "across";
-	char down[] = "down";
 
    	for (i=0; i<length; i++) {
      		for(row=0; row<15; row++){
@@ -139,7 +141,9 @@ void  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[])
 							clues[clueCount].clueRow=row;
 							clues[clueCount].clueCol=col;
 							strcpy(clues[clueCount].location, "across");
-							clues[clueCount].hint= strfry(word[i]);
+							char temp[16]={0};
+							strcpy(temp, word);
+							jumbleWords( temp, clues, clueCount);
 							clueCount++;
 						// Place solution onto board
 							place_horiz(word, board, row, col, i, length);
@@ -150,7 +154,9 @@ void  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[])
 	 						clues[clueCount].clueRow=row;
                                                         clues[clueCount].clueCol=col;
                                                         strcpy(clues[clueCount].location, "down");
-                                                        clues[clueCount].hint=strfry(word[i]);
+							char temp[16]={0};
+                                                        strcpy(temp, word);
+                                                        jumbleWords( temp, clues, clueCount);
 							clueCount++;
                                                 // Place solution onto board
 							place_vert(word, board, row, col, i, length);
@@ -225,4 +231,7 @@ void place_vert(char * word, char board[15][15], int row, int col, int i, int le
 	for (n=0; n<length; n++) {
 		board[row-i+n][col]=word[n];
 	}
+}
+void jumbleWords( char * a, clues_t clues[], int clueCount) {
+	strcpy(clues[clueCount].hint, (char*) strfry(a));
 }
