@@ -23,7 +23,7 @@ void initializeBoard( char [][15] );
 void sortWords( char [][16] , int);
 int compare(char * a, char * b);
 int initialPlace(char [][16], char [][15], clues_t clues[], int);
-void placeWord(char [], char [][15], int, clues_t clues[]);
+int placeWord(char [], char [][15], int, clues_t clues[]);
 int can_place_word_horiz(char [], char [][15], int, int, int, int);
 int can_place_word_vert(char [], char [][15], int, int, int, int);
 void place_horiz(char[], char[][15], int, int, int, int);
@@ -52,7 +52,7 @@ int main() {
    	int n;
 
 	for(n=1; n<(i-1); n++) {
-		placeWord(words[n], board, clueCount, clues);
+		clueCount=placeWord(words[n], board, clueCount, clues);
 	}
 
 // Print Solution
@@ -80,10 +80,12 @@ int main() {
                	printf("\n");
         }
 
-// Display Hints 
-	for (n=0; n<i; n++) {
-		printf("%s", clues[n].hint);
+// Display Hints
+	printf("\n");
+	for (n=0; n<clueCount; n++) {
+		printf("%2d, %2d, %6s, %s\n",clues[n].clueRow, clues[n].clueCol, clues[n].location, clues[n].hint);
 	}
+	printf("\n");
 }
 int userInput( char words[21][16] ) {
 	char key[2] = ".";
@@ -148,7 +150,7 @@ int initialPlace(char words[21][16], char board[15][15], clues_t clues[], int cl
                 clueCount++;
 		return clueCount;
 }
-void  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) {
+int  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) {
 
    	int row,col,i;
    	int length= strlen(word);
@@ -158,36 +160,32 @@ void  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[])
        			for(col=0; col<15; col++){
 	 			if (board[row][col]==word[i]) {
 	   				if (can_place_word_horiz(word, board, row, col, i, length)) {
-	   					// Get info for Clues
+	   					// Place Solution onto Board
+							place_horiz(word, board, row, col, i, length);
+						// Get info for Clues
 							clues[clueCount].clueRow=row;
 							clues[clueCount].clueCol=col;
 							strcpy(clues[clueCount].location, "across");
-							char temp[16]={0};
-							strcpy(temp, word);
-							jumbleWords( temp, clues, clueCount);
+							strcpy(clues[clueCount].hint, (char*) strfry(word));
 							clueCount++;
-						// Place solution onto board
-							place_horiz(word, board, row, col, i, length);
-						return;
+						return clueCount;
 	   				}
 					else if (can_place_word_vert(word, board, row, col, i, length)) {
-	 					// Get Info for Clues
+	 					// Place Solution onto Board
+							place_vert(word, board, row, col, i, length);
+						// Get Info for Clues
 	 						clues[clueCount].clueRow=row;
                                                         clues[clueCount].clueCol=col;
                                                         strcpy(clues[clueCount].location, "down");
-							char temp[16]={0};
-                                                        strcpy(temp, word);
-                                                        jumbleWords( temp, clues, clueCount);
+							strcpy(clues[clueCount].hint, (char*) strfry(word));
 							clueCount++;
-                                                // Place solution onto board
-							place_vert(word, board, row, col, i, length);
-						return;
+						return clueCount;
 					}
 				}
        			}
      		}
    	}
-     	return;
+     	return clueCount;
  }
 int can_place_word_horiz(char * word, char board[15][15], int row, int col, int i, int length) {
 
