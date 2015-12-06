@@ -31,10 +31,14 @@ void jumbleWords( char * a, clues_t clues[], int);
 int main() {
 
 // Get User Input
-	char words[21][16];
+  char words[21][16] = {0};
 	int i;
 
 	i = userInput(words);
+
+	if(i==-1){
+	  return 0;
+	}
 
 // Initialize Board
 	char board[15][15] = {0};
@@ -99,15 +103,18 @@ int userInput( char words[21][16] ) {
 		i++;
         }
 
-	for(x=0; x<i; x++) {
+	for(x=0; x<(i-1); x++) {
 	  for(j=0; j<16; j++) {
 	    if(words[x][j] >= 'a' && words[x][j] <= 'z') {
 	      words[x][j] = words[x][j] - 32;
 	    }
+	    if((words[x][j] < 'A' || words[x][j] > 'Z') && (words[x][j] != 0 )){
+	      printf("Invalid input. Please try again.");
+	      i=-1;
+	      return i;
+	    }
 	  }
 	}
-
-
 	return i;
 }
 void initializeBoard(char board[15][15]) {
@@ -157,7 +164,6 @@ int  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) 
      		for(row=0; row<15; row++){
        			for(col=0; col<15; col++){
 	 			if (board[row][col]==word[i]) {
-				  printf("%c",word[i]);
 	   				if (can_place_word_horiz(word, board, row, col, i, length)) {
 	   					// Place Solution onto Board
 							place_horiz(word, board, row, col, i, length);
@@ -184,6 +190,7 @@ int  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) 
        			}
      		}
    	}
+	printf("%s cannot be placed in puzzle.\n",word);
      	return clueCount;
  }
 int can_place_word_horiz(char * word, char board[15][15], int row, int col, int i, int length) {
@@ -192,12 +199,12 @@ int can_place_word_horiz(char * word, char board[15][15], int row, int col, int 
 	int n,k;
 
 	// Checking against width of board
-		if ((length-i) > (15-col) || ((col-i+1)< 0)) {
+	if ((length-(i+1)) > (14-col) || ((col-i-1)< 0)) {
 			return place_failure;
 		}
 	// Checking immedietly above through immedietly below the potential place for the word
 		for (n=(row-1); n<=(row+1); n++) {
-			for (k=(col-i+1); k<=(col+(length-i)); k++) {
+			for (k=(col-i-1); k<=(col+(length-i)); k++) {
 				if (k==col) {
 					// disregards column bc letters can be there
 				}
@@ -218,12 +225,12 @@ int can_place_word_vert(char * word, char board[15][15], int row, int col, int i
         int n,k;
 	
 	// Checking against height of the board
-	if ((length-i) > (15-row) || ((row-i+1)< 0)) { 
+	if ((length-i) > (14-row) || ((row-i-1)< 0)) { 
                         return place_failure;
                 }
 	// Checking immediently to the left through immedietly to the right of potenital place for word
 		for (n=(col-1); n<=(col+1); n++) {
-                        for (k=(row-i+1); k<=(row+(length-i)); k++) {
+                        for (k=(row-i-1); k<=(row+(length-i)); k++) {
                                 if (k==row) {
                                         // disregards column bc letters can be there
                                 }
