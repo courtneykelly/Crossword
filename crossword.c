@@ -22,7 +22,7 @@ int userInput( char [][16] );
 void initializeBoard( char [][15] );
 void sortWords( char [][16] , int);
 int compare(char * a, char * b);
-void initialPlace(char [][16], char [][15], clues_t clues[], int);
+int initialPlace(char [][16], char [][15], clues_t clues[], int);
 void placeWord(char [], char [][15], int, clues_t clues[]);
 int can_place_word_horiz(char [], char [][15], int, int, int, int);
 int can_place_word_vert(char [], char [][15], int, int, int, int);
@@ -48,7 +48,7 @@ int main() {
 	sortWords(words,i);
 
 // Generate Puzzle
-	initialPlace(words,board, clues, clueCount);
+	clueCount=initialPlace(words,board, clues, clueCount);
    	int n;
 
 	for(n=1; n<(i-1); n++) {
@@ -128,7 +128,7 @@ int compare(char * a, char * b) {
 	if (strlen(a) == strlen(b)) return 0;
   	if (strlen(a) < strlen(b)) return 1;
 }
-void initialPlace(char words[21][16], char board[15][15], clues_t clues[], int clueCount) {
+int initialPlace(char words[21][16], char board[15][15], clues_t clues[], int clueCount) {
 
   	int length = strlen(words[0]);
   	int startPoint = (15 - length)/2;
@@ -143,9 +143,10 @@ void initialPlace(char words[21][16], char board[15][15], clues_t clues[], int c
                 clues[clueCount].clueCol=startPoint;
                	strcpy(clues[clueCount].location, "across");
                 char temp[16]={0};
-                strcpy(temp, word);
+                strcpy(temp, words[0]);
                 jumbleWords( temp, clues, clueCount);
                 clueCount++;
+		return clueCount;
 }
 void  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) {
 
