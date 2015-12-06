@@ -2,8 +2,6 @@
 // crossword.c
 // Katie Schermerhorn and Courtney Kelly
 
-//cycle through failed words
-//print hints
 
 #define _GNU_SOURCE
 #include <stdio.h>
@@ -159,12 +157,13 @@ int  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) 
      		for(row=0; row<15; row++){
        			for(col=0; col<15; col++){
 	 			if (board[row][col]==word[i]) {
+				  printf("%c",word[i]);
 	   				if (can_place_word_horiz(word, board, row, col, i, length)) {
 	   					// Place Solution onto Board
 							place_horiz(word, board, row, col, i, length);
 						// Get info for Clues
 							clues[clueCount].clueRow=row;
-							clues[clueCount].clueCol=col;
+							clues[clueCount].clueCol=col-i+1;
 							strcpy(clues[clueCount].location, "across");
 							strcpy(clues[clueCount].hint, (char*) strfry(word));
 							clueCount++;
@@ -174,7 +173,7 @@ int  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) 
 	 					// Place Solution onto Board
 							place_vert(word, board, row, col, i, length);
 						// Get Info for Clues
-	 						clues[clueCount].clueRow=row;
+	 						clues[clueCount].clueRow=row-i+1;
                                                         clues[clueCount].clueCol=col;
                                                         strcpy(clues[clueCount].location, "down");
 							strcpy(clues[clueCount].hint, (char*) strfry(word));
@@ -208,7 +207,7 @@ int can_place_word_horiz(char * word, char board[15][15], int row, int col, int 
 			}
 		}
 	// Checking the endpoints of the word
-		if ((board[row][col-i] != key) || (board[row][col+(length-i)+1] != key)) {
+		if ((board[row][col-i-1] != key) || (board[row][col+(length-i)+1] != key)) {
 			return place_failure;
 		}
 	return place_success;
@@ -219,7 +218,7 @@ int can_place_word_vert(char * word, char board[15][15], int row, int col, int i
         int n,k;
 	
 	// Checking against height of the board
-		if ((length-i) > (15-row) || ((row-i+1)< 0)) {
+	if ((length-i) > (15-row) || ((row-i+1)< 0)) { 
                         return place_failure;
                 }
 	// Checking immediently to the left through immedietly to the right of potenital place for word
@@ -234,7 +233,7 @@ int can_place_word_vert(char * word, char board[15][15], int row, int col, int i
 			}
 		}
 	// Checking the enpoints of the word
-		if ((board[row-i][col] != key) || (board[row+(length-i+1)][col] != key)) {
+		if ((board[row-i-1][col] != key) || (board[row+(length-i+1)][col] != key)) {
                         return place_failure;
                 }
         return place_success;
