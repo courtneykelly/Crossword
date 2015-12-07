@@ -146,8 +146,8 @@ int initialPlace(char words[21][16], char board[15][15], clues_t clues[], int cl
     		n++;
   	}
 	// Get Info for clues
-		clues[clueCount].clueRow=7;
-                clues[clueCount].clueCol=startPoint;
+		clues[clueCount].clueRow=8;
+                clues[clueCount].clueCol=startPoint+1;
                	strcpy(clues[clueCount].location, "across");
                 char temp[16]={0};
                 strcpy(temp, words[0]);
@@ -168,7 +168,7 @@ int  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) 
 	   					// Place Solution onto Board
 							place_horiz(word, board, row, col, i, length);
 						// Get info for Clues
-							clues[clueCount].clueRow=row;
+							clues[clueCount].clueRow=row+1;
 							clues[clueCount].clueCol=col-i+1;
 							strcpy(clues[clueCount].location, "across");
 							strcpy(clues[clueCount].hint, (char*) strfry(word));
@@ -180,7 +180,7 @@ int  placeWord(char * word, char board[15][15], int clueCount, clues_t clues[]) 
 							place_vert(word, board, row, col, i, length);
 						// Get Info for Clues
 	 						clues[clueCount].clueRow=row-i+1;
-                                                        clues[clueCount].clueCol=col;
+                                                        clues[clueCount].clueCol=col+1;
                                                         strcpy(clues[clueCount].location, "down");
 							strcpy(clues[clueCount].hint, (char*) strfry(word));
 							clueCount++;
