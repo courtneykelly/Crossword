@@ -26,7 +26,6 @@ int can_place_word_horiz(char [], char [][15], int, int, int, int);
 int can_place_word_vert(char [], char [][15], int, int, int, int);
 void place_horiz(char[], char[][15], int, int, int, int);
 void place_vert(char[], char[][15], int, int, int, int);
-void jumbleWords( char * a, clues_t clues[], int);
 
 int main() {
 
@@ -149,9 +148,7 @@ int initialPlace(char words[21][16], char board[15][15], clues_t clues[], int cl
 		clues[clueCount].clueRow=8;
                 clues[clueCount].clueCol=startPoint+1;
                	strcpy(clues[clueCount].location, "across");
-                char temp[16]={0};
-                strcpy(temp, words[0]);
-                jumbleWords( temp, clues, clueCount);
+                strcpy(clues[clueCount].hint, (char*) strfry(words[0]));
                 clueCount++;
 		return clueCount;
 }
@@ -232,7 +229,7 @@ int can_place_word_vert(char * word, char board[15][15], int row, int col, int i
 		for (n=(col-1); n<=(col+1); n++) {
                         for (k=(row-i-1); k<=(row+(length-i)); k++) {
                                 if (k==row) {
-                                        // disregards column bc letters can be there
+                                        // disregards row bc letters can be there
                                 }
                                 else if (board[k][n] != key) {
 					return place_failure;
@@ -256,7 +253,4 @@ void place_vert(char * word, char board[15][15], int row, int col, int i, int le
 	for (n=0; n<length; n++) {
 		board[row-i+n][col]=word[n];
 	}
-}
-void jumbleWords( char * a, clues_t clues[], int clueCount) {
-	strcpy(clues[clueCount].hint, (char*) strfry(a));
 }
